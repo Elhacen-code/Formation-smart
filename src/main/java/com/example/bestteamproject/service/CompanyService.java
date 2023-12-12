@@ -31,4 +31,29 @@ public class CompanyService {
         }
         return false;
     }
+
+    public Company findById(Long id){
+        Optional<Company> companyOptional = repository.findById(id);
+        if(companyOptional.isPresent())
+            return companyOptional.get();
+        return null;
+    }
+
+    public String update(Company company, Long id){
+        Optional<Company> companyOptional =repository.findById(id);
+        if (companyOptional.isPresent()) {
+            Company updatedCompany = companyOptional.get();
+
+            updatedCompany.setName(company.getName());
+
+            repository.save(updatedCompany);
+            return "Company updated !";
+
+        }
+        return "Old company not found !";
+    }
+
+    public List<Company> findByName(String name){
+        return repository.findByName(name);
+    }
 }
