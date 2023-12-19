@@ -27,6 +27,7 @@ public class Server {
     private String ipAdress;
     private ServerStatus status;
 
+
     @ManyToOne(optional = false)
     private Company company;
 }

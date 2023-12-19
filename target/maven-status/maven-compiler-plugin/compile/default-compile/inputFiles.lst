@@ -1,0 +1,12 @@
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/controller/ServerController.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/dto/CompanyServerDto.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/service/ServerService.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/dao/ServerRepository.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/entity/Server.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/service/RSA.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/service/CompanyService.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/entity/Company.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/controller/CompanyController.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/BestteamprojectApplication.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/Enumeration/ServerStatus.java
+/home/hp/Desktop/Formation/Starter/src/main/java/com/example/bestteamproject/dao/CompanyRepository.java

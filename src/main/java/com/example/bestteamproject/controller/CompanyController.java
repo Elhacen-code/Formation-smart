@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/company")
 public class CompanyController {
     
     @Autowired
@@ -43,5 +43,10 @@ public class CompanyController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateCompany(@RequestBody Company company, @PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.update(company, id));
+    }
+
+    @GetMapping("/company-servers/{idCompany}")
+    public ResponseEntity<Object> getCompanyServers(@PathVariable Long idCompany){
+        return service.getCompanyServers(idCompany);
     }
 }
