@@ -1,23 +1,20 @@
-package com.example.bestteamproject.controller;
+package com.example.bestteamproject.web;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.bestteamproject.entity.Company;
 import com.example.bestteamproject.entity.Server;
 import com.example.bestteamproject.service.ServerService;
+import com.example.bestteamproject.utils.Constants;
 
 @RestController
-@RequestMapping("/api/server")
+@RequestMapping(Constants.APP_ROOT+Constants.SERVER)
 public class ServerController {
     
     @Autowired
@@ -33,10 +30,5 @@ public class ServerController {
     public ResponseEntity<List<Server>> getAllServers(){
         return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
-
-    // @GetMapping("/{id}")
-    // public ResponseEntity<Server> getCompanyByID(@RequestBody Server server, @PathVariable("id") Long id){
-
-    // }
 
 }
