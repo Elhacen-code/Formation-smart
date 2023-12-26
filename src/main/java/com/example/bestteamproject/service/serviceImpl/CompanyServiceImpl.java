@@ -13,7 +13,10 @@ import com.example.bestteamproject.entity.Company;
 import com.example.bestteamproject.entity.Server;
 import com.example.bestteamproject.service.CompanyService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService{
 
     @Autowired
