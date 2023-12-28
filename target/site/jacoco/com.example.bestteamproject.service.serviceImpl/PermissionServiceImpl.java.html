@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PermissionServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bestteamproject</a> &gt; <a href="index.source.html" class="el_package">com.example.bestteamproject.service.serviceImpl</a> &gt; <span class="el_source">PermissionServiceImpl.java</span></div><h1>PermissionServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.bestteamproject.service.serviceImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import com.example.bestteamproject.dao.PermissionRepository;
+import com.example.bestteamproject.entity.Permission;
+import com.example.bestteamproject.service.PermissionServices;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L14">public class PermissionServiceImpl implements PermissionServices {</span>
+
+    @Autowired
+    private PermissionRepository permissionRepository;
+
+    @Override
+    public List&lt;Permission&gt; getAllPermissions() {
+<span class="nc" id="L21">        return permissionRepository.findAll();</span>
+    }
+
+    @Override
+    public Permission createPermission(Permission permission) {
+<span class="nc" id="L26">        return permissionRepository.save(permission);</span>
+    }
+
+    @Override
+    public Permission getPermissionById(long id) {
+<span class="nc" id="L31">        return permissionRepository.findById(id)</span>
+<span class="nc" id="L32">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Permission not found&quot;));</span>
+    }
+
+    @Override
+    public Permission updatePermission(long id, Permission updatedPermission) {
+<span class="nc" id="L37">        Optional&lt;Permission&gt; optionalPermission = permissionRepository.findById(id);</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (optionalPermission.isPresent()) {</span>
+<span class="nc" id="L39">            Permission permission = optionalPermission.get();</span>
+<span class="nc" id="L40">            permission.setName(updatedPermission.getName());</span>
+<span class="nc" id="L41">            return permissionRepository.save(permission);</span>
+        } else {
+<span class="nc" id="L43">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Permission not found&quot;);</span>
+        }
+    }
+
+    @Override
+    public Boolean deletePermission(long id) {
+<span class="nc" id="L49">        permissionRepository.deleteById(id);</span>
+<span class="nc" id="L50">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

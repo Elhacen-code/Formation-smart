@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserInfoUserDetails.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bestteamproject</a> &gt; <a href="index.source.html" class="el_package">com.example.bestteamproject.security</a> &gt; <span class="el_source">UserInfoUserDetails.java</span></div><h1>UserInfoUserDetails.java</h1><pre class="source lang-java linenums">package com.example.bestteamproject.security;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.example.bestteamproject.entity.AppUser;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class UserInfoUserDetails implements UserDetails {
+
+    private String name;
+    private String password;
+    private List&lt;GrantedAuthority&gt; authorities;
+
+<span class="nc" id="L18">    public UserInfoUserDetails(AppUser userInfo) {</span>
+<span class="nc" id="L19">        name = userInfo.getUsername();</span>
+<span class="nc" id="L20">        password = userInfo.getPassword();</span>
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        if (userInfo.getRole() != null) {</span>
+<span class="nc" id="L22">            authorities = userInfo.getRole().getPermissions()</span>
+<span class="nc" id="L23">                    .stream()</span>
+<span class="nc" id="L24">                    .map(permission -&gt; new SimpleGrantedAuthority(permission.getName()))</span>
+<span class="nc" id="L25">                    .collect(Collectors.toList());</span>
+        } else {
+<span class="nc" id="L27">            authorities = Collections.emptyList();</span>
+        }
+<span class="nc" id="L29">    }</span>
+
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<span class="nc" id="L33">        return authorities;</span>
+    }
+
+    @Override
+    public String getPassword() {
+<span class="nc" id="L38">        return password;</span>
+    }
+
+    @Override
+    public String getUsername() {
+<span class="nc" id="L43">        return name;</span>
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+<span class="nc" id="L48">        return true;</span>
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+<span class="nc" id="L53">        return true;</span>
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+<span class="nc" id="L58">        return true;</span>
+    }
+
+    @Override
+    public boolean isEnabled() {
+<span class="nc" id="L63">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

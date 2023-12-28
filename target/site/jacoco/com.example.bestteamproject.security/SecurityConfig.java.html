@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bestteamproject</a> &gt; <a href="index.source.html" class="el_package">com.example.bestteamproject.security</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.example.bestteamproject.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+<span class="fc" id="L24">public class SecurityConfig {</span>
+    @Autowired
+    private JwtAuthFilter authFilter;
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+<span class="fc" id="L30">        return new UserInfoUserDetailsService();</span>
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L35">        return http.cors().and().csrf().disable()</span>
+<span class="fc" id="L36">                .authorizeHttpRequests()</span>
+<span class="fc" id="L37">                .requestMatchers(HttpMethod.POST, &quot;/auth/*&quot;).permitAll()</span>
+<span class="fc" id="L38">                .requestMatchers(HttpMethod.GET, &quot;/auth/*&quot;).permitAll()</span>
+<span class="fc" id="L39">                .requestMatchers(HttpMethod.PUT, &quot;/auth/*&quot;).permitAll()</span>
+<span class="fc" id="L40">                .requestMatchers(HttpMethod.DELETE, &quot;/auth/*&quot;).permitAll()</span>
+<span class="fc" id="L41">                .requestMatchers(HttpMethod.GET, &quot;/swagger-ui/**&quot;, &quot;v3/api-docs/**&quot;).permitAll()</span>
+
+<span class="fc" id="L43">                .and()</span>
+<span class="fc" id="L44">                .authorizeHttpRequests()</span>
+<span class="fc" id="L45">                .requestMatchers(HttpMethod.GET, &quot;/admin/roles&quot;).hasAuthority(&quot;list_role&quot;)</span>
+<span class="fc" id="L46">                .requestMatchers(HttpMethod.GET, &quot;/admin/roles/{id}&quot;).hasAuthority(&quot;view_role&quot;)</span>
+<span class="fc" id="L47">                .requestMatchers(HttpMethod.POST, &quot;/admin/roles&quot;).hasAuthority(&quot;create_role&quot;)</span>
+<span class="fc" id="L48">                .requestMatchers(HttpMethod.PUT, &quot;/aadminroles&quot;).hasAuthority(&quot;update_role&quot;)</span>
+<span class="fc" id="L49">                .requestMatchers(HttpMethod.DELETE, &quot;/aadminroles/{id}&quot;).hasAuthority(&quot;delete_role&quot;)</span>
+
+<span class="fc" id="L51">                .requestMatchers(HttpMethod.GET, &quot;/admin/permissions&quot;).hasAuthority(&quot;list_permission&quot;)</span>
+<span class="fc" id="L52">                .requestMatchers(HttpMethod.GET, &quot;/admin/permissions/{id}&quot;).hasAuthority(&quot;view_permission&quot;)</span>
+<span class="fc" id="L53">                .requestMatchers(HttpMethod.POST, &quot;/admin/permissions&quot;).hasAuthority(&quot;create_permission&quot;)</span>
+<span class="fc" id="L54">                .requestMatchers(HttpMethod.PUT, &quot;/admin/permissions&quot;).hasAuthority(&quot;update_permission&quot;)</span>
+<span class="fc" id="L55">                .requestMatchers(HttpMethod.DELETE, &quot;/admin/permissions/{id}&quot;).hasAuthority(&quot;delete_permission&quot;)</span>
+
+<span class="fc" id="L57">                .requestMatchers(HttpMethod.GET, &quot;/admin/users&quot;).hasAuthority(&quot;list_user&quot;)</span>
+<span class="fc" id="L58">                .requestMatchers(HttpMethod.POST, &quot;/admin/update-password&quot;).hasAuthority(&quot;update_user_password&quot;)</span>
+<span class="fc" id="L59">                .requestMatchers(HttpMethod.POST, &quot;/admin/addroletouser&quot;).hasAuthority(&quot;update_user_role&quot;)</span>
+<span class="fc" id="L60">                .requestMatchers(HttpMethod.DELETE, &quot;/admin/users/{id}&quot;).hasAuthority(&quot;delete_user&quot;)</span>
+
+<span class="fc" id="L62">                .requestMatchers(HttpMethod.PUT, &quot;/user/update-password&quot;).hasAuthority(&quot;update_user_password&quot;)</span>
+<span class="fc" id="L63">                .requestMatchers(HttpMethod.POST, &quot;/user/reset-password&quot;).hasAuthority(&quot;update_user_password&quot;)</span>
+<span class="fc" id="L64">                .requestMatchers(HttpMethod.GET, &quot;/user/profile&quot;).hasAuthority(&quot;get_profile&quot;)</span>
+<span class="fc" id="L65">                .requestMatchers(HttpMethod.PUT, &quot;/user/profile&quot;).hasAuthority(&quot;update_profile&quot;)</span>
+
+<span class="fc" id="L67">                .requestMatchers(HttpMethod.PUT, &quot;/api/company&quot;).hasAuthority(&quot;update_company&quot;)</span>
+<span class="fc" id="L68">                .requestMatchers(HttpMethod.POST, &quot;/api/company&quot;).hasAuthority(&quot;create_company&quot;)</span>
+<span class="fc" id="L69">                .requestMatchers(HttpMethod.GET, &quot;/api/company/all&quot;).hasAuthority(&quot;view_company&quot;)</span>
+
+<span class="fc" id="L71">                .and()</span>
+<span class="fc" id="L72">                .sessionManagement()</span>
+<span class="fc" id="L73">                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)</span>
+<span class="fc" id="L74">                .and()</span>
+<span class="fc" id="L75">                .authenticationProvider(authenticationProvider())</span>
+<span class="fc" id="L76">                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)</span>
+<span class="fc" id="L77">                .build();</span>
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+<span class="fc" id="L82">        return new BCryptPasswordEncoder();</span>
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+<span class="fc" id="L87">        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();</span>
+<span class="fc" id="L88">        authenticationProvider.setUserDetailsService(userDetailsService());</span>
+<span class="fc" id="L89">        authenticationProvider.setPasswordEncoder(passwordEncoder());</span>
+<span class="fc" id="L90">        return authenticationProvider;</span>
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+<span class="fc" id="L95">        return config.getAuthenticationManager();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

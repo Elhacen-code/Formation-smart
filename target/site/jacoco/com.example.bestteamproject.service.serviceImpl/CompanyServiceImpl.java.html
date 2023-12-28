@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompanyServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bestteamproject</a> &gt; <a href="index.source.html" class="el_package">com.example.bestteamproject.service.serviceImpl</a> &gt; <span class="el_source">CompanyServiceImpl.java</span></div><h1>CompanyServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.bestteamproject.service.serviceImpl;
+
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import com.example.bestteamproject.dao.CompanyRepository;
+import com.example.bestteamproject.dao.ServerRepository;
+import com.example.bestteamproject.dto.CompanyServerDto;
+import com.example.bestteamproject.entity.Company;
+import com.example.bestteamproject.entity.Server;
+import com.example.bestteamproject.service.CompanyService;
+
+import lombok.AllArgsConstructor;
+
+@Service
+<span class="fc" id="L19">@AllArgsConstructor</span>
+public class CompanyServiceImpl implements CompanyService{
+
+    @Autowired
+    private CompanyRepository repository;
+
+    @Autowired
+    private ServerRepository serverRepository;
+
+    @Override
+    public List&lt;Company&gt; findAll() {
+<span class="nc" id="L30">        return repository.findAll();</span>
+    }
+
+    @Override
+    public Company create(Company company) {
+<span class="nc" id="L35">        return repository.save(company);</span>
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+<span class="nc" id="L40">        Optional&lt;Company&gt; companyOptional = repository.findById(id);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (companyOptional.isPresent()) {</span>
+<span class="nc" id="L42">            repository.deleteById(id);</span>
+<span class="nc" id="L43">            return true;</span>
+        }
+<span class="nc" id="L45">        return false;</span>
+    }
+
+    @Override
+    public Company findById(Long id) {
+<span class="nc" id="L50">        Optional&lt;Company&gt; companyOptional = repository.findById(id);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (companyOptional.isPresent())</span>
+<span class="nc" id="L52">            return companyOptional.get();</span>
+<span class="nc" id="L53">        return null;</span>
+    }
+
+    @Override
+    public String update(Company company, Long id) {
+<span class="nc" id="L58">        Optional&lt;Company&gt; companyOptional = repository.findById(id);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (companyOptional.isPresent()) {</span>
+<span class="nc" id="L60">            Company updatedCompany = companyOptional.get();</span>
+
+<span class="nc" id="L62">            updatedCompany.setName(company.getName());</span>
+
+<span class="nc" id="L64">            repository.save(updatedCompany);</span>
+<span class="nc" id="L65">            return &quot;Company updated !&quot;;</span>
+
+        }
+<span class="nc" id="L68">        return &quot;Old company not found !&quot;;</span>
+    }
+
+    @Override
+    public List&lt;Company&gt; findByName(String name) {
+<span class="nc" id="L73">        return repository.findByName(name);</span>
+    }
+
+    @Override
+    public ResponseEntity&lt;Object&gt; getCompanyServers(Long idCompany) {
+<span class="fc" id="L78">        Optional&lt;Company&gt; optionalCompany = repository.findById(idCompany);</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (optionalCompany.isPresent()) {</span>
+<span class="fc" id="L80">            var company = optionalCompany.get();</span>
+
+<span class="fc" id="L82">            List&lt;Server&gt; companyServers = serverRepository.findByCompany(company);</span>
+<span class="fc" id="L83">            var companyServerDto = new CompanyServerDto(companyServers.size(), companyServers);</span>
+
+<span class="fc" id="L85">            return ResponseEntity.ok().body(companyServerDto);</span>
+        }
+
+<span class="nc" id="L88">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Company not found&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

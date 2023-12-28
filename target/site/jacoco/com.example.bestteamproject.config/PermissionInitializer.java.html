@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PermissionInitializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bestteamproject</a> &gt; <a href="index.source.html" class="el_package">com.example.bestteamproject.config</a> &gt; <span class="el_source">PermissionInitializer.java</span></div><h1>PermissionInitializer.java</h1><pre class="source lang-java linenums">package com.example.bestteamproject.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.bestteamproject.dao.AppUserRepository;
+import com.example.bestteamproject.dao.PermissionRepository;
+import com.example.bestteamproject.dao.RoleRepository;
+import com.example.bestteamproject.entity.AppUser;
+import com.example.bestteamproject.entity.Permission;
+import com.example.bestteamproject.entity.Role;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.Optional;
+
+@Component
+public class PermissionInitializer implements ApplicationRunner {
+
+    @Autowired
+    private final PermissionRepository permissionRepository;
+
+    @Autowired
+    private final RoleRepository roleRepository;
+
+    @Autowired
+    private AppUserRepository userInfoRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public PermissionInitializer(PermissionRepository permissionRepository, RoleRepository roleRepository,
+            AppUserRepository userInfoRepository,
+<span class="fc" id="L36">            PasswordEncoder passwordEncoder) {</span>
+<span class="fc" id="L37">        this.permissionRepository = permissionRepository;</span>
+<span class="fc" id="L38">        this.roleRepository = roleRepository;</span>
+<span class="fc" id="L39">        this.userInfoRepository = userInfoRepository;</span>
+<span class="fc" id="L40">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L41">    }</span>
+
+    @Override
+    public void run(ApplicationArguments args) {
+<span class="fc" id="L45">        String[] perm_list = { &quot;list_role&quot;, &quot;view_role&quot;, &quot;create_role&quot;, &quot;update_role&quot;, &quot;delete_role&quot;,</span>
+                &quot;list_permission&quot;, &quot;view_permission&quot;, &quot;create_permission&quot;, &quot;update_permission&quot;, &quot;delete_permission&quot;,
+                &quot;list_user&quot;, &quot;update_user_password&quot;, &quot;update_user_role&quot;, &quot;delete_user&quot;, &quot;list_account&quot;, &quot;view_account&quot;,&quot;create_permission&quot;, 
+                &quot;update_user_password&quot;, &quot;get_profile&quot;, &quot;update_profile&quot;,&quot;create_company&quot;,&quot;view_company&quot;
+        };
+
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        for (String perm : perm_list) {</span>
+<span class="fc" id="L52">            createPermissionIfNotFound(perm);</span>
+        }
+
+<span class="fc" id="L55">        createSuperAdminRole(&quot;super_admin&quot;);</span>
+<span class="fc" id="L56">        createSuperUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin@admin.com&quot;);</span>
+<span class="fc" id="L57">    }</span>
+
+    @Transactional
+    public void createPermissionIfNotFound(String name) {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        if (!permissionRepository.existsByName(name)) {</span>
+<span class="nc" id="L62">            Permission permission = new Permission();</span>
+<span class="nc" id="L63">            permission.setName(name);</span>
+<span class="nc" id="L64">            permissionRepository.save(permission);</span>
+        }
+<span class="fc" id="L66">    }</span>
+
+    @Transactional
+    public void createSuperUser(String username, String password, String email) {
+<span class="fc" id="L70">        Optional&lt;AppUser&gt; user1 = userInfoRepository.findByUsername(username);</span>
+<span class="fc" id="L71">        Optional&lt;AppUser&gt; user2 = userInfoRepository.findByEmail(email);</span>
+<span class="pc bpc" id="L72" title="3 of 4 branches missed.">        if (user1.isPresent() || user2.isPresent()) {</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            AppUser user = user1.isPresent() ? user1.get() : user2.get();</span>
+<span class="fc" id="L74">            user.setUsername(username);</span>
+<span class="fc" id="L75">            user.setEmail(email);</span>
+<span class="fc" id="L76">            user.setPassword(passwordEncoder.encode(password));</span>
+<span class="fc" id="L77">            user.setRole(roleRepository.findByName(&quot;super_admin&quot;));</span>
+<span class="fc" id="L78">            userInfoRepository.save(user);</span>
+<span class="fc" id="L79">        } else {</span>
+<span class="nc" id="L80">            AppUser user = new AppUser();</span>
+<span class="nc" id="L81">            user.setUsername(username);</span>
+<span class="nc" id="L82">            user.setPassword(passwordEncoder.encode(password));</span>
+<span class="nc" id="L83">            user.setRole(roleRepository.findByName(&quot;super_admin&quot;));</span>
+<span class="nc" id="L84">            user.setEmail(email);</span>
+<span class="nc" id="L85">            userInfoRepository.save(user);</span>
+        }
+<span class="fc" id="L87">    }</span>
+
+    @Transactional
+    public void createSuperAdminRole(String name) {
+<span class="fc" id="L91">        Role superAdminRole = roleRepository.findByName(name);</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (superAdminRole == null) {</span>
+            // Create new super admin role if it does not exist
+<span class="nc" id="L94">            superAdminRole = new Role();</span>
+<span class="nc" id="L95">            superAdminRole.setName(name);</span>
+<span class="nc" id="L96">            superAdminRole.setPermissions(permissionRepository.findAll());</span>
+<span class="nc" id="L97">            roleRepository.save(superAdminRole);</span>
+        } else {
+            // Update existing super admin role by adding super user permission
+<span class="fc" id="L100">            superAdminRole.setPermissions(permissionRepository.findAll());</span>
+<span class="fc" id="L101">            roleRepository.save(superAdminRole);</span>
+        }
+<span class="fc" id="L103">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
